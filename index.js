@@ -22,31 +22,40 @@ request(url, function(error, response, html){
     $('div.pager-wrapper div.item-list-first div.item-list .pager').filter(function(){
       nmbrOfPages = $(this).children().last().prev().children().attr('attr-page-number')
     })
-
+    var names = []
     $('.poi-search-result').filter(function(){
       let listOfRest = $(this).children()
       let count = 0
       listOfRest.each(function(i, elem) {
-          var title = $(this).children().attr('attr-gtm-title')
-          console.log(title)
+          let title = $(this).children().attr('attr-gtm-title')
+          names.push(title)
         });
 
   })
-  for (let i = 0; i < nmbrOfPages; i++) {
+  let doneCounter = 0
+  for (let i = 1; i < nmbrOfPages; i++) {
     let urlPage = url+"/page-"+i;
     console.log(urlPage)
-    request(url, function(error, response, urlPage){
-      $('.poi-search-result').filter(function(){
+    request(urlPage, function(error, response, html){
+      var $ = cheerio.load(html)
+        $('.poi-search-result').filter(function(){
         let listOfRest = $(this).children()
         let count = 0
         listOfRest.each(function(i, elem) {
             let title = $(this).children().attr('attr-gtm-title')
-            console.log(title)
+            names.push(title)
           });
-  
+      doneCounter++;
     })
     })
   }
+  setInterval(function(){
+    console.log(names.length)
+    if(doneCounter == nmbrOfPages-1)
+    {
+      console.log("Launch the lafourchette code")
+    }
+  }, 1000)
 }
 })
 
