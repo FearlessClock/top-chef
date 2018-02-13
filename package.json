@@ -2,7 +2,7 @@
   "name": "top-chef",
   "version": "1.0.0",
   "description": "Link between michelin and Lafourchette",
-  "main": "index.js",
+  "main": "app.js",
   "directories": {
     "doc": "docs"
   },
