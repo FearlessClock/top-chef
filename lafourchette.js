@@ -10,7 +10,10 @@ function loadDeals(names){
             if(!error){
                 let $ = cheerio.load(html)
 
-                console.log($('li.resultItem:nth-child(1)').attr('data-restaurant-id'))
+                console.log($('div#results.resultContainer ul.list-unstyled li.resultItem a').attr('href'))
+            }
+            else{
+                console.log(error)
             }
         })
     });
