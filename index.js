@@ -42,7 +42,7 @@ function getStarredRestoNames(){
       nmbrOfPages = parseInt($(this).children().last().prev().children().attr('attr-page-number'))
       console.log(nmbrOfPages)
     })
-
+    
     let doneCounter = 0
     let links = [];
     for (let i = 1; i < nmbrOfPages+1-20; i++) {
@@ -106,6 +106,5 @@ function getNames(){
 function areNamesLoaded(){
   return doneLoading;
 }
-getStarredRestoNames()
 module.exports = {getStarredRestoNames, getNames, areNamesLoaded}
 
