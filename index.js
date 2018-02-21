@@ -17,7 +17,8 @@ var doneLoading = false
 function getStarredRestoNames(){
     
   let restoNameSchema = mongoose.Schema({
-    name: String
+    name: String,
+    zipCode: String
   });
 
   let restoName = mongoose.model('RestoName', restoNameSchema);
@@ -44,7 +45,7 @@ function getStarredRestoNames(){
 
     let doneCounter = 0
     let links = [];
-    for (let i = 1; i < nmbrOfPages+1; i++) {
+    for (let i = 1; i < nmbrOfPages+1-20; i++) {
       let urlPage = url+"/page-"+i;
       links.push(urlPage);
     }
@@ -55,20 +56,46 @@ function getStarredRestoNames(){
               return cheerio.load(body);
           }
         };
-        return rp(option)
+        return new Promise((resolve, reject) => rp(option)
               .then(function($){
                   $('.poi-search-result').filter(function(){
                     let listOfRest = $(this).children()
+                    let addresses = []
                     listOfRest.each(function(i, elem) {
-                      let title = new restoName({ name: $(this).children().attr('attr-gtm-title') });
-                      title.save(function (err, product) {
-                        if (err) console.log(err, product)
-                      })
+                      let addressURL = $(this).children().children().attr('href');
+                      addresses.push("https://restaurant.michelin.fr/" + addressURL);
                     });
+                    return resolve(addresses);
                   })
               })
-        })
-    Promise.all(promises).then(() => console.log("Done"));
+        )}
+      );
+    Promise.all(promises).then((result) => {
+      result.forEach(element => {
+
+          let promises = element.map((value) => {
+            let option = {
+              uri: value,
+              transform: function (body) {
+                  return cheerio.load(body);
+              }
+            };
+
+            return new Promise((resolve, reject) => rp(option)
+              .then(function($){
+                let title = new restoName({ name: $("div.panel-pane-inside ol.restaurant_base-breadcrumbs-list").children().last().children().text(), 
+                                            zipCode: $("span.postal-code").html() });
+                title.save(function (err, product) {
+                  if (err) console.log(err, product)
+                })
+                return resolve();
+              })
+            )
+          })
+          Promise.all(promises).then((results) => console.log("Done"));
+      });
+    });
+    
     })
 }
 
