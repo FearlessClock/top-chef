@@ -11,18 +11,17 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
 });
 
+var restoNameSchema = mongoose.Schema({
+  name: String,
+  zipCode: String
+});
+
+var restoName = mongoose.model('RestoName', restoNameSchema);
+
 var names = []
 var doneLoading = false
   //All the web scraping magic will happen here
-function getStarredRestoNames(){
-    
-  let restoNameSchema = mongoose.Schema({
-    name: String,
-    zipCode: String
-  });
-
-  let restoName = mongoose.model('RestoName', restoNameSchema);
-
+function scrapeRestoNames(){
   url = 'https://restaurant.michelin.fr/restaurants/france/restaurants-1-etoile-michelin/restaurants-2-etoiles-michelin/restaurants-3-etoiles-michelin';
   var options = {
     uri: url,
@@ -45,17 +44,19 @@ function getStarredRestoNames(){
     
     let doneCounter = 0
     let links = [];
-    for (let i = 1; i < nmbrOfPages+1-20; i++) {
+    for (let i = 1; i < nmbrOfPages+1; i++) {
       let urlPage = url+"/page-"+i;
       links.push(urlPage);
     }
-      let promises = links.map(link => {
+
+    let promises = links.map(link => {
         let option = {
           uri: link,
           transform: function (body) {
               return cheerio.load(body);
           }
         };
+        
         return new Promise((resolve, reject) => rp(option)
               .then(function($){
                   $('.poi-search-result').filter(function(){
@@ -68,8 +69,9 @@ function getStarredRestoNames(){
                     return resolve(addresses);
                   })
               })
-        )}
-      );
+      )}
+    );
+
     Promise.all(promises).then((result) => {
       result.forEach(element => {
 
@@ -99,12 +101,21 @@ function getStarredRestoNames(){
     })
 }
 
-function getNames(){
-  return names;
+async function getNames(){
+  let restos = await new Promise((resolve, reject) => {
+      restoName.find({}).exec(function (err, restos) {
+      if (err) return handleError(err);
+        resolve(restos)
+    })
+  })
+  return restos
+  // then((results) => {
+  //   console.log("index.js: " + results)
+  //   return results});
 }
 
 function areNamesLoaded(){
   return doneLoading;
 }
-module.exports = {getStarredRestoNames, getNames, areNamesLoaded}
+module.exports = {scrapeRestoNames, getNames, areNamesLoaded}
 
