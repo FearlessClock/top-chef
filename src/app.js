@@ -23,7 +23,7 @@ class IndecisionApp extends React.Component {
       }
 
       getDealsFromAPI() {
-        $.getJSON('http://127.0.0.1:1234/getNames?callback=?', this.getDealsFromAPICallback)
+        $.getJSON('http://127.0.0.1:1234/getDeals?callback=?', this.getDealsFromAPICallback)
       }
 
       getDealsFromAPICallback(results){
@@ -38,7 +38,7 @@ class IndecisionApp extends React.Component {
           <div>
             <Header title={title} subtitle={subtitle} />
             <Options
-              data={this.state.RestaurentNames}
+              data={this.state.Deals}
             />
           </div>
         );
@@ -61,7 +61,10 @@ class IndecisionApp extends React.Component {
         return (
           <div>
             {
-              this.props.data.map((info) => <Option key={info._id} optionText={info.name} />)
+              this.props.data.map((info) => <Option 
+                                            key={info._id} 
+                                            name={info.name}
+                                            description={info.description} />)
             }
           </div>
         );
@@ -72,7 +75,8 @@ class IndecisionApp extends React.Component {
       render() {
         return (
           <div>
-            {this.props.optionText}
+            <p>{this.props.name}</p>
+            <p>{this.props.description}</p>
           </div>
         );
       }

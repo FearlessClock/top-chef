@@ -44,7 +44,7 @@ var IndecisionApp = function (_React$Component) {
   }, {
     key: 'getDealsFromAPI',
     value: function getDealsFromAPI() {
-      $.getJSON('http://127.0.0.1:1234/getNames?callback=?', this.getDealsFromAPICallback);
+      $.getJSON('http://127.0.0.1:1234/getDeals?callback=?', this.getDealsFromAPICallback);
     }
   }, {
     key: 'getDealsFromAPICallback',
@@ -62,7 +62,7 @@ var IndecisionApp = function (_React$Component) {
         null,
         React.createElement(Header, { title: title, subtitle: subtitle }),
         React.createElement(Options, {
-          data: this.state.RestaurentNames
+          data: this.state.Deals
         })
       );
     }
@@ -119,7 +119,10 @@ var Options = function (_React$Component3) {
         'div',
         null,
         this.props.data.map(function (info) {
-          return React.createElement(Option, { key: info._id, optionText: info.name });
+          return React.createElement(Option, {
+            key: info._id,
+            name: info.name,
+            description: info.description });
         })
       );
     }
@@ -143,7 +146,16 @@ var Option = function (_React$Component4) {
       return React.createElement(
         'div',
         null,
-        this.props.optionText
+        React.createElement(
+          'p',
+          null,
+          this.props.name
+        ),
+        React.createElement(
+          'p',
+          null,
+          this.props.description
+        )
       );
     }
   }]);

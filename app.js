@@ -17,11 +17,22 @@ var restoNameSchema = mongoose.Schema({
 });
 
 var restoName = mongoose.model('RestoName', restoNameSchema);
+    
+let dealSchema = mongoose.Schema({
+    id: Number,
+    name: String,
+    description: String,
+    zipCode: String,
+    distinction: String,
+    deals: []
+  });
+
+let dealName = mongoose.model('dealName', dealSchema);
 
 //Scrape the restaurent names from michelin and then the deals from lafourchette
 //michelin.scrapeRestoNames(restoName)  //Should be be up to date 
 // michelin.getNames(restoName).then((names) => {
-//       lafourchette.loadDeals(names)
+//       lafourchette.loadDeals(names, dealName)
 // })
 
 const express = require("express");
@@ -37,6 +48,12 @@ server.listen(1234);
 
 app.get('/getNames', (req, res) => {
   michelin.getNames(restoName).then((names) => {
+    res.jsonp(names);
+  })
+})
+
+app.get('/getDeals', (req, res) => {
+  lafourchette.getDeals(dealName).then((names) => {
     res.jsonp(names);
   })
 })

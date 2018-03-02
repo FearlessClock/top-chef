@@ -2,25 +2,6 @@ var fs      = require('fs');
 var request = require('request');
 var rp = require('request-promise');
 var cheerio = require('cheerio');
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/LaFourchetteDeals');
-    
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-});
-
-    
-let dealSchema = mongoose.Schema({
-    id: Number,
-    name: String,
-    description: String,
-    zipCode: String,
-    distinction: String,
-    deals: []
-  });
-
-  let dealName = mongoose.model('dealName', dealSchema);
 
 function getCorrectResto(objectJson, restaurant){
     let restoId = undefined;
@@ -38,7 +19,7 @@ function getCorrectResto(objectJson, restaurant){
     });
 }
 
-function loadDeals(restos){
+function loadDeals(restos, dealName){
     let lafourchetteAPI = "https://m.lafourchette.com/api/restaurant/"
     let url = "https://m.lafourchette.com/api/restaurant-prediction?name="
 
@@ -51,7 +32,7 @@ function loadDeals(restos){
     
     console.log("Nmbr of restos: " + restos.length);
     let promises = restos.map(restaurant => {
-        let requestedUrl = url + restaurant.name.replace(/ /g, "+").ereaseAccent();
+        let requestedUrl = url + restaurant.name.replace(/ /g, "+").eraseAccent();
         
         var options = {
             url: requestedUrl
@@ -118,13 +99,18 @@ function loadDeals(restos){
     })
 }
 
-function getDeals(){
-
-
+async function getDeals(dealName){
+    let deals = await new Promise((resolve, reject) => {
+        dealName.find({}).exec(function (err, deals) {
+        if (err) return handleError(err);
+          resolve(deals)
+      })
+    })
+    return deals
 }
 
 
-String.prototype.ereaseAccent = function(){
+String.prototype.eraseAccent = function(){
     const accents = [
         "\306","\346",                  //AE, ae
         /[\300-\305]/g, /[\340-\345]/g, // A, a
