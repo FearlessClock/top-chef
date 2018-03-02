@@ -2,6 +2,7 @@ class IndecisionApp extends React.Component {
       constructor(props) {
         super(props);
         this.restoNameCallback = this.restoNameCallback.bind(this);
+        this.getDealsFromAPICallback = this.getDealsFromAPICallback.bind(this);
         this.state = {  
           RestaurentNames: [],
           Deals: []
@@ -10,6 +11,7 @@ class IndecisionApp extends React.Component {
 
       componentDidMount() {
         this.RestoNames();
+        this.getDealsFromAPI();
       }
 
       RestoNames() {
@@ -17,7 +19,15 @@ class IndecisionApp extends React.Component {
       }
 
       restoNameCallback(results){
-        this.setState({ data: results })
+        this.setState({ RestaurentNames: results })
+      }
+
+      getDealsFromAPI() {
+        $.getJSON('http://127.0.0.1:1234/getNames?callback=?', this.getDealsFromAPICallback)
+      }
+
+      getDealsFromAPICallback(results){
+        this.setState({ Deals: results })
       }
 
       render() {
@@ -28,7 +38,7 @@ class IndecisionApp extends React.Component {
           <div>
             <Header title={title} subtitle={subtitle} />
             <Options
-              data={this.state.data}
+              data={this.state.RestaurentNames}
             />
           </div>
         );

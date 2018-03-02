@@ -17,6 +17,7 @@ var IndecisionApp = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (IndecisionApp.__proto__ || Object.getPrototypeOf(IndecisionApp)).call(this, props));
 
     _this.restoNameCallback = _this.restoNameCallback.bind(_this);
+    _this.getDealsFromAPICallback = _this.getDealsFromAPICallback.bind(_this);
     _this.state = {
       RestaurentNames: [],
       Deals: []
@@ -28,6 +29,7 @@ var IndecisionApp = function (_React$Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.RestoNames();
+      this.getDealsFromAPI();
     }
   }, {
     key: 'RestoNames',
@@ -37,7 +39,17 @@ var IndecisionApp = function (_React$Component) {
   }, {
     key: 'restoNameCallback',
     value: function restoNameCallback(results) {
-      this.setState({ data: results });
+      this.setState({ RestaurentNames: results });
+    }
+  }, {
+    key: 'getDealsFromAPI',
+    value: function getDealsFromAPI() {
+      $.getJSON('http://127.0.0.1:1234/getNames?callback=?', this.getDealsFromAPICallback);
+    }
+  }, {
+    key: 'getDealsFromAPICallback',
+    value: function getDealsFromAPICallback(results) {
+      this.setState({ Deals: results });
     }
   }, {
     key: 'render',
@@ -50,7 +62,7 @@ var IndecisionApp = function (_React$Component) {
         null,
         React.createElement(Header, { title: title, subtitle: subtitle }),
         React.createElement(Options, {
-          data: this.state.data
+          data: this.state.RestaurentNames
         })
       );
     }
