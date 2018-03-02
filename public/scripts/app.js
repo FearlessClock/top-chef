@@ -59,7 +59,7 @@ var IndecisionApp = function (_React$Component) {
 
       return React.createElement(
         'div',
-        null,
+        { className: 'Screen' },
         React.createElement(Header, { title: title, subtitle: subtitle }),
         React.createElement(Options, {
           data: this.state.Deals
@@ -85,7 +85,7 @@ var Header = function (_React$Component2) {
     value: function render() {
       return React.createElement(
         'div',
-        null,
+        { className: 'navbar navbar-inverse' },
         React.createElement(
           'h1',
           null,
@@ -117,13 +117,16 @@ var Options = function (_React$Component3) {
     value: function render() {
       return React.createElement(
         'div',
-        null,
-        this.props.data.map(function (info) {
-          return React.createElement(Option, {
-            key: info._id,
-            name: info.name,
-            description: info.description });
-        })
+        { className: 'row' },
+        React.createElement(
+          'div',
+          { className: 'col-md-4' },
+          this.props.data.map(function (info) {
+            return React.createElement(Option, {
+              key: info._id,
+              info: info });
+          })
+        )
       );
     }
   }]);
@@ -145,22 +148,60 @@ var Option = function (_React$Component4) {
     value: function render() {
       return React.createElement(
         'div',
-        null,
+        { className: 'card' },
         React.createElement(
-          'p',
-          null,
-          this.props.name
-        ),
-        React.createElement(
-          'p',
-          null,
-          this.props.description
+          'div',
+          { className: 'card-block' },
+          React.createElement(
+            'p',
+            { className: 'card-title' },
+            this.props.info.name
+          ),
+          React.createElement(
+            'p',
+            null,
+            this.props.info.description
+          ),
+          this.props.info.deals.map(function (deal) {
+            return React.createElement(Deal, { deal: deal });
+          })
         )
       );
     }
   }]);
 
   return Option;
+}(React.Component);
+
+var Deal = function (_React$Component5) {
+  _inherits(Deal, _React$Component5);
+
+  function Deal() {
+    _classCallCheck(this, Deal);
+
+    return _possibleConstructorReturn(this, (Deal.__proto__ || Object.getPrototypeOf(Deal)).apply(this, arguments));
+  }
+
+  _createClass(Deal, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'div',
+        { className: 'card' },
+        React.createElement(
+          'div',
+          { className: 'deal' },
+          React.createElement(
+            'p',
+            null,
+            this.props.deal
+          )
+        )
+      );
+    }
+  }]);
+
+  return Deal;
 }(React.Component);
 
 ReactDOM.render(React.createElement(IndecisionApp, null), document.getElementById('app'));

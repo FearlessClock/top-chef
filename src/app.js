@@ -35,7 +35,7 @@ class IndecisionApp extends React.Component {
         const subtitle = 'Get good deals on great restaurents';
     
         return (
-          <div>
+          <div className="Screen">
             <Header title={title} subtitle={subtitle} />
             <Options
               data={this.state.Deals}
@@ -48,7 +48,7 @@ class IndecisionApp extends React.Component {
     class Header extends React.Component {
       render() {
         return (
-          <div>
+          <div className="navbar navbar-inverse">
             <h1>{this.props.title}</h1>
             <h2>{this.props.subtitle}</h2>
           </div>
@@ -59,13 +59,14 @@ class IndecisionApp extends React.Component {
     class Options extends React.Component {
       render() {
         return (
-          <div>
-            {
-              this.props.data.map((info) => <Option 
-                                            key={info._id} 
-                                            name={info.name}
-                                            description={info.description} />)
-            }
+          <div className="row">
+            <div className="col-md-4">
+              {
+                this.props.data.map((info) => <Option 
+                                              key={info._id} 
+                                              info={info} />)
+              }
+            </div>
           </div>
         );
       }
@@ -74,9 +75,24 @@ class IndecisionApp extends React.Component {
     class Option extends React.Component {
       render() {
         return (
-          <div>
-            <p>{this.props.name}</p>
-            <p>{this.props.description}</p>
+          <div className="card">
+            <div className="card-block">
+              <p className="card-title">{this.props.info.name}</p>
+              <p>{this.props.info.description}</p>
+              {this.props.info.deals.map((deal) => <Deal deal={deal}/>)}
+            </div>
+          </div>
+        );
+      }
+    }
+
+    class Deal extends React.Component{
+      render(){
+        return (
+          <div className="card">
+            <div className="deal">
+              <p>{this.props.deal}</p>
+            </div>
           </div>
         );
       }

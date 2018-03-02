@@ -58,6 +58,13 @@ app.get('/getDeals', (req, res) => {
   })
 })
 
+app.get('/LoadDeals', (req, res) => {
+    michelin.getNames(restoName).then((names) => {
+        lafourchette.loadDeals(names, dealName)
+  })
+  res.send("Loading data, check console");
+})
+
 /**
  * Event listener for HTTP server "listening" event.
  */
