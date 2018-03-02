@@ -1,2 +1,2 @@
-cd D:\MongoDB\bin
-.\mongod --dbpath="D:\Git\Wed Architecture\top-chef\data"
+cd %1
+.\mongod --dbpath=%2
