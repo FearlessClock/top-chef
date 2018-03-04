@@ -72,6 +72,7 @@ function scrapeRestoNames(restoName){
               .then(function($){
                 let title = new restoName({ name: $("div.panel-pane-inside ol.restaurant_base-breadcrumbs-list").children().last().children().text(), 
                                             zipCode: $("span.postal-code").html() });
+                console.log(title)
                 title.save(function (err, product) {
                   if (err) console.log(err, product)
                 })

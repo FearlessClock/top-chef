@@ -16,3 +16,6 @@ the information via an API to the React web page.
 
 The scraping is done using Cheerio for the Michelin site and for
 the lafourchette site, we are using the mobile API provided by lafourchette.
+
+To load the Restaurants. Go to the path /LoadRestaurents
+To load the deals. Go to the path /LoadDeals

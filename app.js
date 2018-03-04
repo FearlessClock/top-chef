@@ -60,8 +60,13 @@ app.get('/getDeals', (req, res) => {
 
 app.get('/LoadDeals', (req, res) => {
     michelin.getNames(restoName).then((names) => {
-        lafourchette.loadDeals(names, dealName)
+      lafourchette.loadDeals(names, dealName)
   })
+  res.send("Loading data, check console");
+})
+
+app.get('/LoadRestaurents', (req, res) => {
+  michelin.scrapeRestoNames(restoName)
   res.send("Loading data, check console");
 })
 
